@@ -17,6 +17,48 @@ accounts of any Microsoft 365 organisation.
 **Use only one tool to manage a mailbox's automatic replies.** The app remembers only what it wrote itself,
 so a reply set by another tool counts as manual and is left alone.
 
+## Download and install
+
+Requirements: Windows 10/11 (64-bit) and a work or school Microsoft 365 account with an Exchange Online
+mailbox. Personal Microsoft accounts (outlook.com, hotmail) and on-premises Exchange are not supported.
+No .NET installation and no admin rights are needed.
+
+1. Download `AOOOA-<version>-win-x64.zip` from the latest release:
+   **https://github.com/robi26/AOOOA-tray/releases/latest**
+2. Right-click the zip → **Properties** → tick **Unblock** → **OK**. Otherwise Windows shows a SmartScreen
+   warning on every start. If it still appears, click **More info** → **Run anyway**.
+3. Unpack it to **`%LOCALAPPDATA%\Programs\AOOOA`** (paste the path into the Explorer address bar). Keep
+   `AOOOA.exe` and `appsettings.json` together in that folder. Don't run it from the Downloads folder: the
+   autostart entry remembers the exe's location.
+4. Start `AOOOA.exe`. The app appears as an icon in the taskbar notification area (behind the `^` arrow).
+
+Or in PowerShell, from the folder with the zip:
+
+```powershell
+$target = "$env:LOCALAPPDATA\Programs\AOOOA"
+Unblock-File .\AOOOA-*-win-x64.zip
+Expand-Archive .\AOOOA-*-win-x64.zip -DestinationPath $target -Force
+Start-Process "$target\AOOOA.exe"
+```
+
+### First start
+1. **Sign in** with your work or school account. On a PC joined to your organisation this happens without
+   asking. The first time, Microsoft asks you to allow the app to read your calendar and manage your mailbox
+   settings. If your organisation blocks this, your IT administrator has to approve the app (see
+   [Users from other organisations](#users-from-other-organisations)).
+2. In the settings window, tick **"Abwesenheitsnotiz automatisch aus meinem Kalender verwalten"**
+   (*Manage my automatic reply from my calendar*), adjust the texts if you like, and click **Speichern** (*Save*).
+3. In the tray menu, tick **"Mit Windows starten"** (*Start with Windows*).
+4. Mark an absence in your Outlook calendar with **Show as: Out of office**. The tray menu then shows the next
+   absence and until when the automatic reply will be active.
+
+### Update and uninstall
+- **Update:** quit the app (tray menu → **Beenden** / *Exit*), replace both files with the new version and
+  start it again. Settings and sign-in are kept in `%LOCALAPPDATA%\SST\AOOOA`.
+- **Uninstall:** switch off **"Mit Windows starten"**, quit the app, then delete
+  `%LOCALAPPDATA%\Programs\AOOOA` and `%LOCALAPPDATA%\SST\AOOOA`. A reply the app has already scheduled stays
+  in Outlook until its end time; switch it off there if needed.
+
 ## Projects
 
 | Project | Purpose |
@@ -130,7 +172,7 @@ dotnet test --solution SST.AutoOutOfOfficeAssistant.slnx
 Only one instance runs at a time; close the tray app before rebuilding, otherwise its DLLs are locked.
 
 ## Verification
-1. Start the app, sign in, switch on "Abwesenheitsnotiz automatisch verwalten" and save.
+1. Start the app, sign in, tick "Abwesenheitsnotiz automatisch aus meinem Kalender verwalten" and save.
 2. Create an all-day "Out of office" event tomorrow and one on the following Monday. After "Jetzt prüfen" the
    menu shows one merged absence, and Outlook (File → Automatic Replies) shows a scheduled reply with the
    correct `{EndDate}` and `{ReturnDate}`.
