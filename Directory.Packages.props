@@ -1,0 +1,13 @@
+<Project>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.Graph" Version="6.9.0" />
+
+    <!-- MSAL with the Windows broker; Broker and Client versions must match -->
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.84.2" />
+    <PackageVersion Include="Microsoft.Identity.Client.Broker" Version="4.84.2" />
+    <PackageVersion Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.84.2" />
+
+    <!-- Tests -->
+    <PackageVersion Include="TUnit" Version="1.76.28" />
+  </ItemGroup>
+</Project>

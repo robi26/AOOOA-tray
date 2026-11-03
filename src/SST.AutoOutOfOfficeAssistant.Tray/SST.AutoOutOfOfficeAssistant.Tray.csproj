@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <!-- Lets the solution build on Linux agents too; the app itself only runs on Windows. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AssemblyName>AOOOA</AssemblyName>
+    <RootNamespace>SST.AutoOutOfOfficeAssistant.Tray</RootNamespace>
+    <Product>AOOOA – Automatische Abwesenheitsnotiz</Product>
+    <Company>SST</Company>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Identity.Client" />
+    <PackageReference Include="Microsoft.Identity.Client.Broker" />
+    <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SST.AutoOutOfOfficeAssistant.Core\SST.AutoOutOfOfficeAssistant.Core.csproj" />
+    <ProjectReference Include="..\SST.AutoOutOfOfficeAssistant.Graph\SST.AutoOutOfOfficeAssistant.Graph.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Kept next to the exe (not bundled into the single file), so the client ID can be checked or changed. -->
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
+  </ItemGroup>
+</Project>

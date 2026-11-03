@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Microsoft Graph access, shared by the Function app (app-only) and the tray app (delegated). -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Graph" />
+    <InternalsVisibleTo Include="SST.AutoOutOfOfficeAssistant.Graph.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SST.AutoOutOfOfficeAssistant.Core\SST.AutoOutOfOfficeAssistant.Core.csproj" />
+  </ItemGroup>
+</Project>

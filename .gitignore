@@ -1,0 +1,20 @@
+## .NET / Visual Studio
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userprefs
+*.DotSettings.user
+*.binlog
+TestResults/
+packages/
+
+## Secrets / certificates
+*.pfx
+*.pem
+
+## IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json

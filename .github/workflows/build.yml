@@ -1,0 +1,56 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write   # attach AOOOA.exe to the release when a v* tag is pushed
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Version
+        shell: pwsh
+        run: |
+          $version = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}".TrimStart("v") } else { "0.0.${{ github.run_number }}" }
+          "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Build
+        run: dotnet build SST.AutoOutOfOfficeAssistant.slnx --configuration Release -p:Version=${{ env.VERSION }}
+
+      - name: Test
+        run: dotnet test --solution SST.AutoOutOfOfficeAssistant.slnx --configuration Release --no-build
+
+      # Self-contained single file (~65 MB): runs without an installed .NET runtime.
+      - name: Publish tray app
+        run: >-
+          dotnet publish src/SST.AutoOutOfOfficeAssistant.Tray/SST.AutoOutOfOfficeAssistant.Tray.csproj
+          --configuration Release --runtime win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true -p:DebugType=None
+          -p:Version=${{ env.VERSION }} --output publish
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AOOOA-${{ env.VERSION }}
+          path: publish/
+
+      - name: Attach to release
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          Compress-Archive -Path publish/* -DestinationPath "AOOOA-$env:VERSION-win-x64.zip"
+          gh release create "${{ github.ref_name }}" "AOOOA-$env:VERSION-win-x64.zip" --title "AOOOA $env:VERSION" --generate-notes

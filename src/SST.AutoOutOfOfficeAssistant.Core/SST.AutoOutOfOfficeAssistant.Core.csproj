@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Pure domain logic and API contracts. No Azure dependencies: also referenced by the WebAssembly client. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="SST.AutoOutOfOfficeAssistant.Core.Tests" />
+  </ItemGroup>
+</Project>
